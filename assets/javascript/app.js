@@ -1,11 +1,15 @@
 
-//Input to page
+// need to get user input to create a button by adding to existing array.
+// want to make button produce user input search
+// put all the code below inside those buttons.
+
 //Create an array of search terms
 //Use for loop to create buttons that will search for new gifs and put to page
 //Use user search term to add to array do same thing 
 //Input to page for each new search (using a for loop)
 
-var searchArray = [];
+//what user put in to be searched
+var gifsToDisplay = ["Bob Costas", "Beyonce", "Wine"];
 
     
 
@@ -15,8 +19,8 @@ $("#submitButton").click(function () {
     console.log(userSearchInput);
 
     //Array 
-    searchArray.push(userSearchInput);
-    console.log(searchArray);
+    gifsToDisplay.push(userSearchInput);
+    console.log(gifsToDisplay);
 
 
 var queryURL = "https:api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&q=";
@@ -31,15 +35,43 @@ var gifParameter = "&limit=10&offset=0&rating=G&lang=en";
     }).done(function(response) {
       console.log(response);
 
+      for (var i = 0; i < gifsToDisplay.length; i++) {
+          // Then dynamicaly generating buttons for each movie in the array
+          // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
+          var buttonCreation = $("<button>");
+          // Adding a class of movie to our button
+          buttonCreation.addClass("displayButtons");
+          // Adding a data-attribute
+          buttonCreation.attr("data-name", gifsToDisplay[i]);
+          // Providing the initial button text
+          buttonCreation.text(gifsToDisplay[i]);
+          // Adding the button to the buttons-view div
+          $("#buttonSection").append(buttonCreation);
+      }
+
+      $(".displayButtons").click(function() { 
+          console.log("Buttons work!");
+          //need to save gif to returned to a variable and then convert to image element. Then put that in append to page
+            var imgUrl = response.data[0].images.fixed_height.url;
+            var gifs = $("<img>");
+            gifs.attr("src", imgUrl);
+            gifs.attr("alt", "cat image");
+            
+            
+            $("#gifDisplaySection").append(gifs);
+            $("#gifDisplaySection").append("Rating: ", response.data[0].rating);
+          
+      });
+
       //need to save gif to returned to a variable and then convert to image element. Then put that in append to page
-      var imgUrl = response.data[0].images.fixed_height.url;
+      /*var imgUrl = response.data[0].images.fixed_height.url;
       var gifs = $("<img>");
       gifs.attr("src", imgUrl);
       gifs.attr("alt", "cat image");
       
       
       $("#gifDisplaySection").append(gifs);
-      $("#gifDisplaySection").append("Rating: ", response.data[0].rating);
+      $("#gifDisplaySection").append("Rating: ", response.data[0].rating);*/
       
     });
     
