@@ -8,10 +8,39 @@
 //Use user search term to add to array do same thing 
 //Input to page for each new search (using a for loop)
 
+
+//Global Variables =========================================================
+
 //what user put in to be searched
 var gifsToDisplay = ["Bob Costas", "Beyonce", "Wine"];
 
+
+for (var i = 0; i < gifsToDisplay.length; i++) {
+    // Then dynamicaly generating buttons for each movie in the array
+    // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
+    var buttonCreation = $("<button>");
+    // Adding a class of movie to our button
+    buttonCreation.addClass("displayButtons");
+    // Adding a data-attribute
+    buttonCreation.attr("data-name", gifsToDisplay[i]);
+    // Providing the initial button text
+    buttonCreation.text(gifsToDisplay[i]);
+    // Adding the button to the buttons-view div
+    $("#buttonSection").append(buttonCreation);
+}
+
+$(".displayButtons").click(function() { 
+    console.log("Buttons work2!");
+    getGifs();
+      
+      
     
+});
+    
+//Functions =========================================================================
+
+function getGifs(){
+
 
 $("#submitButton").click(function () { 
     var userSearchInput = $("#userSearchInput").val().trim();
@@ -22,12 +51,24 @@ $("#submitButton").click(function () {
     gifsToDisplay.push(userSearchInput);
     console.log(gifsToDisplay);
 
+    for (var i = 0; i < gifsToDisplay.length; i++) {
+        // Then dynamicaly generating buttons for each movie in the array
+        // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
+        var buttonCreation = $("<button>");
+        // Adding a class of movie to our button
+        buttonCreation.addClass("displayButtons");
+        // Adding a data-attribute
+        buttonCreation.attr("data-name"+[i], gifsToDisplay[i]);
+        // Providing the initial button text
+        buttonCreation.text(gifsToDisplay[i]);
+        // Adding the button to the buttons-view div
+        $("#buttonSection").append(buttonCreation);
+    }
+
 
 var queryURL = "https:api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&q=";
 var searchTerm = userSearchInput;
-
 var gifParameter = "&limit=10&offset=0&rating=G&lang=en";
-
     $.ajax({
       url: queryURL + searchTerm + gifParameter,
       //url: "https://api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&q=Costas&limit=25&offset=0&rating=G&lang=en", 
@@ -35,7 +76,7 @@ var gifParameter = "&limit=10&offset=0&rating=G&lang=en";
     }).done(function(response) {
       console.log(response);
 
-      for (var i = 0; i < gifsToDisplay.length; i++) {
+      /*for (var i = 0; i < gifsToDisplay.length; i++) {
           // Then dynamicaly generating buttons for each movie in the array
           // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
           var buttonCreation = $("<button>");
@@ -47,7 +88,7 @@ var gifParameter = "&limit=10&offset=0&rating=G&lang=en";
           buttonCreation.text(gifsToDisplay[i]);
           // Adding the button to the buttons-view div
           $("#buttonSection").append(buttonCreation);
-      }
+      } */
 
       $(".displayButtons").click(function() { 
           console.log("Buttons work!");
@@ -78,7 +119,7 @@ var gifParameter = "&limit=10&offset=0&rating=G&lang=en";
 });
 
 
-
+}
 
 
 
