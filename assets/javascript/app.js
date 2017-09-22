@@ -1,44 +1,34 @@
 
-//Input to page
-//Create an array of search terms
-//Use for loop to create buttons that will search for new gifs and put to page
-//Use user search term to add to array do same thing 
-//Input to page for each new search (using a for loop)
 
 
 //Global Variables =========================================================
 var gifsToDisplay = ["Bob Costas", "Beyonce", "Wine", "Madonna"];
 
 
-//what user put in to be searched
-function displayButtons() {
-    for (var i = 0; i < gifsToDisplay.length; i++) {
 
-        var createInitialButtons = $("<button>");
-        createInitialButtons.addClass("displayButtons");
-        createInitialButtons.attr("data-name" + [i], gifsToDisplay[i]);
-        createInitialButtons.text(gifsToDisplay[i]);
-
-        $("#buttonSection").append(createInitialButtons);
-
-        $(".displayButtons").click(function () {
-            console.log("Buttons work!");
-            displayGifs();
-        });
-    }
-}
 
 
 
 
 //Functions =========================================================================
 
+//what user put in to be searched
+function createDisplayButtons() {
+    for (var i = 0; i < gifsToDisplay.length; i++) {
 
+        var gifDisplayButtons = $("<button>");
+        gifDisplayButtons.addClass("displayButtons");
+        gifDisplayButtons.attr("data-name", gifsToDisplay[i]);
+        gifDisplayButtons.text(gifsToDisplay[i]);
+
+        $("#buttonSection").append(gifDisplayButtons);
+    }
+}
 
 
 
 // function used to display gifs
-function displayGifs() {
+
 
     var queryURL = "https:api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&q=";
     var searchTerm = userSearchInput;
@@ -49,56 +39,38 @@ function displayGifs() {
     }).done(function (response) {
         console.log(response);
         
-            $(".displayButtons").click(function () {
-                console.log("Buttons work!");
-                //need to save gif to returned to a variable and then convert to image element. Then put that in append to page
-                var imgUrl = response.data[i].images.fixed_height.url;
-                var gifs = $("<img>");
-                gifs.attr("src", imgUrl);
-                gifs.attr("alt", "search image");
-
-
-                $("#gifDisplaySection").append(gifs);
-                $("#gifDisplaySection").append("Rating: ", response.data[i].rating);
-
-
-                
-
-            });
-
-            //need to save gif to returned to a variable and then convert to image element. Then put that in append to page
-            var imgUrl = response.data[0].images.fixed_height.url;
-            var gifs = $("<img>");
-            gifs.attr("src", imgUrl);
-            gifs.attr("alt", "searched image");
-
-
-            $("#gifDisplaySection").append(gifs);
-            $("#gifDisplaySection").append("Rating: ", response.data[0].rating);
-
         
     });
-}
 
 
 
-$("#submitButton").click(function () {
-    var userSearchInput = $("#userSearchInput").val().trim();
-    console.log(userSearchInput);
-
-    gifsToDisplay.push(userSearchInput);
-    console.log(gifsToDisplay);
 
 
-    /*var newButton = $("<button>");
-    newButton.addClass("displayButtons");
-    newButton.attr(userSearchInput);
-    newButton.text(userSearchInput);
-    $("#buttonSection").append(newButton); */
-    $("#buttonSection").empty();
-    displayButtons();
+
+$(document).ready(function () {
+   
+
+$(".displayButtons").click(function () {
+    var buttonThatWasClicked = $(this).attr("data-name");
+    console.log(buttonThatWasClicked);
 
 
+    var queryURL = "https:api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&q=";
+    var searchTerm = buttonThatWasClicked;
+    var gifParameter = "&limit=10&offset=0&rating=G&lang=en";
+        $.ajax({
+          url: queryURL + searchTerm + gifParameter,
+          
+          method: 'GET'
+        }).done(function(response) {
+          console.log(response);
+          
+    
+           
+          
+    
+        });
+});
 })
 
 
@@ -178,9 +150,17 @@ var gifParameter = "&limit=10&offset=0&rating=G&lang=en";
 
 
 // Process ============================================
-displayButtons();
+createDisplayButtons();
 
+$("#submitButton").click(function () {
+    var userSearchInput = $("#userSearchInput").val().trim();
 
+    gifsToDisplay.push(userSearchInput);
 
+    //$(userSearchInput).attr("data-name", gifsToDisplay.length);
+    
+    console.log(gifsToDisplay);
 
-
+    $("#buttonSection").empty();
+    createDisplayButtons();
+})
