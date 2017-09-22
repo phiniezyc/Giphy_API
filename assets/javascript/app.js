@@ -1,166 +1,87 @@
 
-
-
-//Global Variables =========================================================
-var gifsToDisplay = ["Bob Costas", "Beyonce", "Wine", "Madonna"];
-
+// Global Variables =======================================================================
+var gifsToDisplay = ["Beyonce", "Tom Cruise", "Wine", "Katy Perry", "Bruno Mars", "Prince", "Tom Brady", "Bacon", "Justin Bieber", "Future"];
 
 
 
+// Functions =================================================================
 
+function displayButtons() {
+    $("#buttonSection").empty();
 
-
-//Functions =========================================================================
-
-//what user put in to be searched
-function createDisplayButtons() {
     for (var i = 0; i < gifsToDisplay.length; i++) {
-
-        var gifDisplayButtons = $("<button>");
-        gifDisplayButtons.addClass("displayButtons");
-        gifDisplayButtons.attr("data-name", gifsToDisplay[i]);
-        gifDisplayButtons.text(gifsToDisplay[i]);
-
-        $("#buttonSection").append(gifDisplayButtons);
+        var gifButtons = $("<button>");
+        gifButtons.addClass("gifButton");
+        gifButtons.attr("data-name", gifsToDisplay[i]);
+        gifButtons.text(gifsToDisplay[i]);
+        $("#buttonSection").append(gifButtons);
     }
+}
+
+$("#submitButton").on("click", function (event) {
+    event.preventDefault();
+    var userInput = $("#userSearchInput").val().trim();
+    gifsToDisplay.push(userInput);
+    displayButtons();
+});
+
+function displayGifs() {
+    var searchTerm = $(this).attr("data-name");
+    var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + searchTerm + "&api_key=dc6zaTOxFJmzC&limit=10";
+    var gifObjectReturned;
+    var activatedGif;
+    var gifStandard;
+
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    }).done(function (response) {
+        var gifDiv = $("<div class='gif'></div>");
+
+        for (var i = 0; i < 10; i++) {
+            var gifReturnedRating = response.data[i].rating;
+            var ratingParagraph = $("<p>").text("Rating: " + gifReturnedRating);
+            gifDiv.append(ratingParagraph);
+
+            gifObjectReturned = response.data[i].images.original_still.url;
+            activatedGif = response.data[i].images.downsized.url;
+            gifStandard = $("<img>").attr({ "src": gifObjectReturned, "gifStandard": gifObjectReturned, "gifAnimated": activatedGif, "gifStatus": "still" });
+            gifDiv.append(gifStandard);
+        }
+        // This clears the document of old gifs before appending w/ new gifs. If want all the gifs pressed then should remove the empty method: 
+        $("#gifDisplaySection").empty();
+        
+        $("#gifDisplaySection").prepend(gifDiv);
+    });
 }
 
 
 
-// function used to display gifs
-
-
-    var queryURL = "https:api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&q=";
-    var searchTerm = userSearchInput;
-    var gifParameter = "&limit=10&offset=0&rating=G&lang=en";
-    $.ajax({
-        url: queryURL + searchTerm + gifParameter,
-        method: 'GET'
-    }).done(function (response) {
-        console.log(response);
-        
-        
-    });
 
 
 
 
 
 
-$(document).ready(function () {
-   
-
-$(".displayButtons").click(function () {
-    var buttonThatWasClicked = $(this).attr("data-name");
-    console.log(buttonThatWasClicked);
+$(document).on("click", ".gifButton", displayGifs);
 
 
-    var queryURL = "https:api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&q=";
-    var searchTerm = buttonThatWasClicked;
-    var gifParameter = "&limit=10&offset=0&rating=G&lang=en";
-        $.ajax({
-          url: queryURL + searchTerm + gifParameter,
-          
-          method: 'GET'
-        }).done(function(response) {
-          console.log(response);
-          
-    
-           
-          
-    
-        });
-});
-})
+$(document).on("click", "img", toggleGifStatus);
 
 
-
-/*$("#submitButton").click(function () { 
-    var userSearchInput = $("#userSearchInput").val().trim();
-    console.log("button works!")
-    console.log(userSearchInput);
-
-    
-    gifsToDisplay.push(userSearchInput);
-    console.log(gifsToDisplay);
-
-    for (var i = 0; i < gifsToDisplay.length; i++) {
-        
-        var buttonCreation = $("<button>");
-        // Adding a class of movie to our button
-        buttonCreation.addClass("displayButtons");
-        // Adding a data-attribute
-        buttonCreation.attr("data-name"+[i], gifsToDisplay[i]);
-        // Providing the initial button text
-        buttonCreation.text(gifsToDisplay[i]);
-        // Adding the button to the buttons-view div
-        $("#buttonSection").append(buttonCreation);
+//Grabbing individual gif and activating that gif or deactivating
+function toggleGifStatus(event) {
+    var gifStatus = $(this).attr("gifStatus");
+    if (gifStatus === "still") {
+        $(this).attr("src", $(this).attr("gifAnimated"));
+        $(this).attr("gifStatus", "animate");
+    } else {
+        $(this).attr("src", $(this).attr("gifStandard"));
+        $(this).attr("gifStatus", "still");
     }
+}
 
 
-var queryURL = "https:api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&q=";
-var searchTerm = userSearchInput;
-var gifParameter = "&limit=10&offset=0&rating=G&lang=en";
-    $.ajax({
-      url: queryURL + searchTerm + gifParameter,
-      
-      method: 'GET'
-    }).done(function(response) {
-      console.log(response);
+// App Mechanics =======================================================================================
 
-
-       
-      for (var i =0; i < response.data.length; i++) {
-      $(".displayButtons").click(function() { 
-          console.log("Buttons work!");
-          //need to save gif to returned to a variable and then convert to image element. Then put that in append to page
-            var imgUrl = response.data[i].images.fixed_height.url;
-            var gifs = $("<img>");
-            gifs.attr("src", imgUrl);
-            gifs.attr("alt", "cat image");
-            
-            
-            $("#gifDisplaySection").append(gifs);
-            $("#gifDisplaySection").append("Rating: ", response.data[i].rating);
-          
-      });
-
-      
-      var imgUrl = response.data[i].images.fixed_height.url;
-      var gifs = $("<img>");
-      gifs.attr("src", imgUrl);
-      gifs.attr("alt", "searched image");
-      
-      
-      $("#gifDisplaySection").append(gifs);
-      $("#gifDisplaySection").append("Rating: ", response.data[i].rating);
-      
-    }
-
-    });
-    
-}); */
-
-
-
-    
-
-
-
-
-
-// Process ============================================
-createDisplayButtons();
-
-$("#submitButton").click(function () {
-    var userSearchInput = $("#userSearchInput").val().trim();
-
-    gifsToDisplay.push(userSearchInput);
-
-    //$(userSearchInput).attr("data-name", gifsToDisplay.length);
-    
-    console.log(gifsToDisplay);
-
-    $("#buttonSection").empty();
-    createDisplayButtons();
-})
+displayButtons();
