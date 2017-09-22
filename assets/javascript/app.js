@@ -48,7 +48,7 @@ function displayGifs() {
         method: 'GET'
     }).done(function (response) {
         console.log(response);
-        for (var i = 0; i < response.data.length; i++) {
+        
             $(".displayButtons").click(function () {
                 console.log("Buttons work!");
                 //need to save gif to returned to a variable and then convert to image element. Then put that in append to page
@@ -61,19 +61,22 @@ function displayGifs() {
                 $("#gifDisplaySection").append(gifs);
                 $("#gifDisplaySection").append("Rating: ", response.data[i].rating);
 
+
+                
+
             });
 
             //need to save gif to returned to a variable and then convert to image element. Then put that in append to page
-            var imgUrl = response.data[i].images.fixed_height.url;
+            var imgUrl = response.data[0].images.fixed_height.url;
             var gifs = $("<img>");
             gifs.attr("src", imgUrl);
             gifs.attr("alt", "searched image");
 
 
             $("#gifDisplaySection").append(gifs);
-            $("#gifDisplaySection").append("Rating: ", response.data[i].rating);
+            $("#gifDisplaySection").append("Rating: ", response.data[0].rating);
 
-        }
+        
     });
 }
 
@@ -165,6 +168,10 @@ var gifParameter = "&limit=10&offset=0&rating=G&lang=en";
     });
     
 }); */
+
+
+
+    
 
 
 
