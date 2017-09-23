@@ -1,0 +1,34 @@
+body {
+    background-color: lightblue;
+}
+
+#gifForm {
+    float: right;
+    margin-top: 10px;
+
+}
+
+#searchLabel {
+    color: white;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+#submitButton {
+    background-color: lightsalmon;
+    font-weight: bold; 
+}
+
+#gifDisplaySection {
+    color: blueviolet;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.gifButton {
+    background-color: lightgoldenrodyellow;
+    margin: 2px;
+    border: 2px solid #B1ADE6;
+}
+
+

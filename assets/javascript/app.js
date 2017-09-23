@@ -2,10 +2,7 @@
 // Global Variables =======================================================================
 var gifsToDisplay = ["Beyonce", "Tom Cruise", "Wine", "Katy Perry", "Bruno Mars", "Prince", "Tom Brady", "Bacon", "Justin Bieber", "Future"];
 
-
-
 // Functions =================================================================
-
 function displayButtons() {
     $("#buttonSection").empty();
 
@@ -50,24 +47,14 @@ function displayGifs() {
         }
         // This clears the document of old gifs before appending w/ new gifs. If want all the gifs pressed then should remove the empty method: 
         $("#gifDisplaySection").empty();
-        
+
         $("#gifDisplaySection").prepend(gifDiv);
     });
 }
-
-
-
-
-
-
-
-
-
 $(document).on("click", ".gifButton", displayGifs);
 
 
 $(document).on("click", "img", toggleGifStatus);
-
 
 //Grabbing individual gif and activating that gif or deactivating
 function toggleGifStatus(event) {
@@ -80,7 +67,6 @@ function toggleGifStatus(event) {
         $(this).attr("gifStatus", "still");
     }
 }
-
 
 // App Mechanics =======================================================================================
 
